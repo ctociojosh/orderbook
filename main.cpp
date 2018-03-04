@@ -18,8 +18,6 @@ int main(int argc, char **argv)
 
     while (std::getline(infile, line)) {
         feed.ProcessMessage(line);
-        feed.PrintCurrentOrderBook(std::cout);
-
         if (++counter % 10 == 0) {
             feed.PrintCurrentOrderBook(std::cout);
             CS::ErrorMonitor::GetInstance().PrintStats();

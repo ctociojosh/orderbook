@@ -1,13 +1,5 @@
 C++ Order Book
 
-Build
-    mkdir build && cd build
-    cmake ../
-    make
-
-Run
-    ./matchengine test/sample_msg.txt
-
 Design
 
     Data Structure:
@@ -49,4 +41,44 @@ Design
         map key is order id, value is a value type of struct Order.
         access and remove complexity is O(1)
 
+Build
+
+    mkdir build && cd build
+    cmake ../
+    make
+
+
+Run
+
+    ./matchengine ../test/sample_msg.txt
+
+    tested with Apple LLVM version 9.0.0 (clang-900.0.39.2) and cmake 3.8
+
+    output:
+
+    ---ORDER BOOK --------------------------------------
+              1075  S 1
+              1050  S 10
+              1025  S 2 S 5
+              1050  B 3
+              1000  B 9 B 1
+               975  B 30
+                                 Duplicated Add 0
+                              Corrupted Message 0
+         Invalid Message(negative/invalid data) 0
+            No trade occur when ask/price cross 0
+                         Trade on missing order 0
+                         Remove a missing order 0
+                                 Modify ignored 0
+                   Remove order with wrong data 0
+        --- TRADE --------------------------------------
+        2@1025
+        --- TRADE --------------------------------------
+        3@1025
+        ---ORDER BOOK --------------------------------------
+              1075  S 1
+              1050  S 10
+              1025  S 4
+              1000  B 9 B 1
+               975  B 30
 
