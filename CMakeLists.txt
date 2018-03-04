@@ -32,13 +32,13 @@ set(CMAKE_CXX_FLAGS_RELEASE "-O2 -DNDEBUG")
 set(CMAKE_CXX_FLAGS_DEBUG "-O0 -g")
 
 add_definitions(-DBOOST_LOG_DYN_LINK)
-find_package(Boost COMPONENTS system filesystem thread-mt log log_setup REQUIRED)
+find_package(Boost COMPONENTS system filesystem thread log log_setup REQUIRED)
 
 include_directories(${BOOST_INCLUDE_DIRS})
 include_directories(${PROJECT_SOURCE_DIR})
 
 message("project path:" ${PROJECT_SOURCE_DIR})
-message("boost po library:" ${BOOSTPO_LIBRARY})
+#message("boost po library:" ${BOOSTPO_LIBRARY})
 
 set(SOURCE_FILES
         main.cpp
