@@ -10,7 +10,6 @@
 #include <vector>
 #include <unordered_map>
 #include <map>
-//#include <memory>
 
 namespace CS {
 
@@ -26,15 +25,11 @@ namespace CS {
     enum class OrderStatus {
         Normal,                 // initial status
         TradeDeleted,           // deleted via trade match
-        //ExgDeleted              // deleted via receiving exchange deleted message.
     };
 
     const Side BUY = 0;
     const Side SELL = 1;
 
-    /*typedef struct {
-        size_t size;
-    }PriceOrderItem;*/
     class PriceOrderItem {
 
     public:
@@ -81,12 +76,9 @@ namespace CS {
 
     typedef Order   OrderEntryType;
 
-    //typedef std::vector<PriceOrderList> PriceOrderBook;
-    //typedef std::map<Price, PriceOrderList> PriceOrderBook;
     typedef std::map<Price, SamePriceOrderList> PriceOrderBook;
-    //typedef std::vector<Order>  HisOrderEntrys;
-    typedef std::unordered_map<OrderId, Order> HisOrderEntrys;
 
+    typedef std::unordered_map<OrderId, Order> HisOrderEntrys;
 
 }
 

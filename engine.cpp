@@ -16,7 +16,6 @@ using namespace std;
 namespace CS {
     Engine::Engine()
     {
-        hisOrderEntry_.reserve(MaxHisOrderNums);
     }
 
     void Engine::HandleOrder(const Order &order) {

@@ -7,8 +7,6 @@
 
 
 namespace CS {
-    const size_t FixedStrLength = 4;
-    const size_t MaxHisOrderNums = 100000;
     const size_t MaxTradeSize = 1000000;
     const size_t MaxTradePrice = 10000000;
     const size_t MaxMsgLength = 50;

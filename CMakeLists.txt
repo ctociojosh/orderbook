@@ -42,7 +42,7 @@ message("boost po library:" ${BOOSTPO_LIBRARY})
 
 set(SOURCE_FILES
         main.cpp
-        main.cpp engine.cpp feed_handler.cpp error_monitor.cpp )
+        main.cpp engine.cpp feed_handler.cpp)
 
 add_executable(matchengine ${SOURCE_FILES})
 target_link_libraries(matchengine ${Boost_LIBRARIES})

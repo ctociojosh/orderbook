@@ -41,6 +41,17 @@ Design
         map key is order id, value is a value type of struct Order.
         access and remove complexity is O(1)
 
+
+Constraint
+
+
+    namespace CS {
+        const size_t MaxTradeSize = 1000000;
+        const size_t MaxTradePrice = 10000000;
+        const size_t MaxMsgLength = 50;
+        const size_t MinMsgLength = 5;
+    }
+
 Build
 
     mkdir build && cd build
@@ -57,28 +68,29 @@ Run
     output:
 
     ---ORDER BOOK --------------------------------------
-              1075  S 1
-              1050  S 10
-              1025  S 2 S 5
-              1050  B 3
-              1000  B 9 B 1
-               975  B 30
-                                 Duplicated Add 0
-                              Corrupted Message 0
-         Invalid Message(negative/invalid data) 0
-            No trade occur when ask/price cross 0
-                         Trade on missing order 0
-                         Remove a missing order 0
-                                 Modify ignored 0
-                   Remove order with wrong data 0
-        --- TRADE --------------------------------------
-        2@1025
-        --- TRADE --------------------------------------
-        3@1025
-        ---ORDER BOOK --------------------------------------
-              1075  S 1
-              1050  S 10
-              1025  S 4
-              1000  B 9 B 1
-               975  B 30
+          1075  S 1
+          1050  S 10
+          1025  S 2 S 5
+          1050  B 3
+          1000  B 9 B 1
+           975  B 30
+    --- STATS --------------------------------------
+                             Duplicated Add 0
+                          Corrupted Message 0
+     Invalid Message(negative/invalid data) 0
+        No trade occur when ask/price cross 0
+                     Trade on missing order 0
+                     Remove a missing order 0
+                             Modify ignored 0
+               Remove order with wrong data 0
+    --- TRADE --------------------------------------
+    2@1025
+    --- TRADE --------------------------------------
+    3@1025
+    ---ORDER BOOK --------------------------------------
+          1075  S 1
+          1050  S 10
+          1025  S 4
+          1000  B 9 B 1
+           975  B 30
 
