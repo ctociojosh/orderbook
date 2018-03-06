@@ -53,12 +53,13 @@ namespace CS {
             return false;
         }
 
-        result = ParsePrice(tokenMsg, trd.tradePrice);
+        double price;
+        result = ParsePrice(tokenMsg, price);
         if (result != ParseResult ::Good) {
             LogParseError(result);
             return false;
         }
-        trd.tradePrice = trd.tradePrice * 100;
+        trd.tradePrice = price * 100;
         return true;
     }
 
@@ -91,12 +92,13 @@ namespace CS {
         }
 
         // price
-        result = ParsePrice(tokenMsg, order.price);
+        double price;
+        result = ParsePrice(tokenMsg, price);
         if (result != ParseResult ::Good) {
             LogParseError(result);
             return false;
         }
-        order.price = order.price * 100;
+        order.price = price * 100;
 
         if (order.price > MaxTradePrice) {
             result = ParseResult ::InvalidMsgData;
@@ -115,13 +117,11 @@ namespace CS {
         MessageType mt = GetMessageType(buf);
 
         if (mt == MessageType::Unknown) {
-            //TODO
             ErrorMonitor::GetInstance().CorruptMessage();
         } else if (mt == MessageType::Trade) {
             if (ParseTrade(buf, trd)) {
                 engine_.HandleTrade(trd);
             } else {
-                //TODO error
                 ErrorMonitor::GetInstance().CorruptMessage();
             }
         } else {
@@ -129,7 +129,6 @@ namespace CS {
             if (ParseOrder(buf, order)) {
                 engine_.HandleOrder(order);
             } else {
-                //TODO error
                 ErrorMonitor::GetInstance().CorruptMessage();
             }
         }

@@ -9,12 +9,14 @@
 
 #include "engine.h"
 #include "error_monitor.h"
+#include "order_book.h"
 
 
 using namespace std;
 
 namespace CS {
     Engine::Engine()
+    :recentTradeSize_(0),recentTradePrice_(0)
     {
     }
 
@@ -22,15 +24,11 @@ namespace CS {
         auto &&oldOrderIt = hisOrderEntry_.find(order.orderId);
 
         if (oldOrderIt == hisOrderEntry_.end()) {
-
-            auto &&ret = hisOrderEntry_.insert(std::make_pair(order.orderId, order));
             if (order.action == MessageType ::Add) {
-                Add(ret.first->second);
-            } else if (order.action == MessageType::Remove){
-                //TODO missing order
-                ErrorMonitor::GetInstance().CancelMissingOrder();
+                Add(order);
             } else {
-                //TODO
+                // missing order
+                ErrorMonitor::GetInstance().CancelMissingOrder();
             }
         } else {
             // order exist
@@ -54,8 +52,8 @@ namespace CS {
 
                 Modify(oldOrder, const_cast<Order&>(order));
                 // update oldOrder info
-                oldOrder.size = order.size;
-                oldOrder.price = order.price;
+                //oldOrder.size = order.size;
+                //oldOrder.price = order.price;
 
             } else {
                 //TODO not possible here
@@ -79,10 +77,15 @@ namespace CS {
     void Engine::Modify(Order &oldOrder, Order &newOrder) {
         CheckAskBidPx();
 
+        if (oldOrder.status == OrderStatus::TradeDeleted) {
+            ErrorMonitor::GetInstance().modifyOrderDeleted();
+            return;
+        }
+
         if (oldOrder.size == newOrder.size &&
                 oldOrder.side == newOrder.side &&
                 oldOrder.price == newOrder.price) {
-            // this is either modify order without any change or
+            // this is either modify order but without any change or
             // after trade happened, an exchange message to reflect the order book/hisentry
             // change(which was done in HandleTrade)
             ErrorMonitor::GetInstance().ModifyIgnored();
@@ -102,14 +105,16 @@ namespace CS {
                 if (buyOrderList != buyOrderBook_.end()) {
                     oldOrder.ptr->size = newOrder.size;
                 } else {
-                    // TODO error
+                    ErrorMonitor::GetInstance().modifyOrderDeleted();
+                    return;
                 }
             } else if (newOrder.side == SELL) {
                 auto &&sellOrderList = sellOrderBook_.find(oldOrder.price);
                 if (sellOrderList != sellOrderBook_.end()) {
                     oldOrder.ptr->size = newOrder.size;
                 } else {
-                    // TODO error
+                    ErrorMonitor::GetInstance().modifyOrderDeleted();
+                    return;
                 }
             }
         }
@@ -131,8 +136,8 @@ namespace CS {
 
         // if the order status is 'trade delete' means we don't need to modify order book
         if (oldOrder.status != OrderStatus::TradeDeleted) {
-            PriceOrderBook &map = newOrder.side == BUY ? buyOrderBook_ : sellOrderBook_;
-            auto &&iter = map.find(newOrder.price);
+            PriceOrderBook &map = oldOrder.side == BUY ? buyOrderBook_ : sellOrderBook_;
+            auto &&iter = map.find(oldOrder.price);
 
             if (iter == map.end()) {
                 ErrorMonitor::GetInstance().RemoveWithWrongData();
@@ -155,8 +160,11 @@ namespace CS {
         }
     }
 
-    void Engine::Add(Order &order) {
+    void Engine::Add(const Order &tmpOrder) {
         CheckAskBidPx();
+
+        auto &&ret = hisOrderEntry_.insert(std::make_pair(tmpOrder.orderId, tmpOrder));
+        Order &order = ret.first->second;
 
         // put in the book
         PriceOrderBook &map = order.side == BUY? buyOrderBook_ : sellOrderBook_;
@@ -164,13 +172,14 @@ namespace CS {
         if (iter!=map.end()) {
             iter->second.emplace_back(order.size, order.orderId);
             iter->second.ChangeTradeSize(order.size);
+            order.ptr = iter->second.end();
+            order.ptr--;
         } else {
             auto &&ret = map.insert(std::make_pair(order.price, SamePriceOrderList()));
             ret.first->second.emplace_back(order.size, order.orderId);
-            //TODO update order position.
+            ret.first->second.ChangeTradeSize(order.size);
             order.ptr = ret.first->second.end();
             order.ptr--;
-            ret.first->second.ChangeTradeSize(order.size);
         }
     }
 
@@ -285,9 +294,10 @@ namespace CS {
             recentTradeSize_ = 0;
         }
         recentTradeSize_ += trade.tradeSize;
+#ifndef PROFILE
         std::cout << "--- TRADE --------------------------------------\n";
         std::cout << recentTradeSize_ << "@" << (double)(recentTradePrice_/ 100.) << endl;
-
+#endif
     }
 
 

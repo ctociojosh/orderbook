@@ -48,7 +48,7 @@ Constraint
     namespace CS {
         const size_t MaxTradeSize = 1000000;
         const size_t MaxTradePrice = 10000000;
-        const size_t MaxMsgLength = 50;
+        const size_t MaxMsgLength = 500;
         const size_t MinMsgLength = 5;
     }
 
@@ -57,6 +57,15 @@ Build
     mkdir build && cd build
     cmake ../
     make
+
+    tested with:
+
+    gcc version 5.4.0 20160609 (Ubuntu 5.4.0-6ubuntu1~16.04.6), cmake 3.5.1
+
+    and
+
+    Apple LLVM version 9.0.0 (clang-900.0.39.2)
+    Target: x86_64-apple-darwin16.7.0, cmake 3.8
 
 
 Run
@@ -93,4 +102,12 @@ Run
           1025  S 4
           1000  B 9 B 1
            975  B 30
+
+
+Performance
+
+    ./perf_score ../test/200k_msg.txt
+
+    total time: 125025602 per msg:395 nanoseconds.
+
 

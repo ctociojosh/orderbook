@@ -31,7 +31,7 @@ namespace CS {
 
         void PrintTradeMessage();
 
-        void Add(Order &order);
+        void Add(const Order &order);
         void Remove(Order &oldOrder, const Order &newOrder);
         void Modify(Order &oldOrder, Order &newOrder);
     };

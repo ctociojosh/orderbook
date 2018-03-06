@@ -6,6 +6,7 @@
 #define CS_ORDERBOOK_FEED_HANDLER_H
 
 #include <string>
+#include <string.h>
 #include "engine.h"
 #include "error_monitor.h"
 
@@ -73,14 +74,15 @@ namespace CS {
             return ParseResult ::Good;
         }
 
-        ParseResult ParsePrice(char *&tk_msg, uint32_t &dest) {
+        ParseResult ParsePrice(char *&tk_msg, double &dest) {
             tk_msg = strtok(NULL, " ");
             if (tk_msg == NULL) {
                 return ParseResult::CorruptMessage;
             }
             else {
                 char * pEnd = NULL;
-                dest = strtol(tk_msg, &pEnd, 10);
+                //dest = strtol(tk_msg, &pEnd, 10);
+                dest = strtod (tk_msg, &pEnd);
                 if (*pEnd)
                     return ParseResult::InvalidMsgData;
             }

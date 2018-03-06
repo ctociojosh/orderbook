@@ -11,20 +11,22 @@
 
 namespace CS {
     class ErrorMonitor {
-        uint64_t    duplicateAdd_;
-        uint64_t    corruptedMsg_;
-        uint64_t    invalidMsg_;
-        uint64_t    bidAskCross_;
-        uint64_t    tradeOnMissingOrder_;
-        uint64_t    invalidTradeSize_;
-        uint64_t    cancelMissingOrder_;
-        uint64_t    modifyIgnored_;
-        uint64_t    removeWrongData_;
+        uint64_t    duplicateAdd_ = 0;
+        uint64_t    corruptedMsg_ = 0;
+        uint64_t    invalidMsg_ = 0;
+        uint64_t    bidAskCross_ = 0;
+        uint64_t    tradeOnMissingOrder_ = 0;
+        uint64_t    invalidTradeSize_ = 0;
+        uint64_t    cancelMissingOrder_ = 0;
+        uint64_t    modifyIgnored_ = 0;
+        uint64_t    removeWrongData_ = 0;
+        uint64_t    modifyOrderDeleted_ = 0;
     public:
         static ErrorMonitor& GetInstance() {
             static ErrorMonitor instance;
             return instance;
         }
+
 
         void DuplicateAdd() {
             ++duplicateAdd_;
@@ -63,6 +65,9 @@ namespace CS {
             modifyIgnored_++;
         }
 
+        void modifyOrderDeleted() {
+            modifyOrderDeleted_++;
+        }
 
         void PrintStats() {
             std::cout << "--- STATS --------------------------------------\n";
